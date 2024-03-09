@@ -47,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -89,6 +90,19 @@ fun MovieAppTopBar() {
 }
 
 @Composable
+fun BottomBarButton(icon: ImageVector, text: String, onClick: () -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy((-9).dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(icon, contentDescription = text)
+        }
+        Text(text = text)
+    }
+}
+
+@Composable
 fun MovieAppBottomBar() {
     BottomAppBar {
         Row(
@@ -96,24 +110,14 @@ fun MovieAppBottomBar() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Top
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy((-9).dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.Home, contentDescription = "Home")
-                }
-                Text(text = "Home")
+            BottomBarButton(icon = Icons.Filled.Home, text = stringResource(id = R.string.home)) {
+                /* TODO handle functionality */
             }
+
             Spacer(modifier = Modifier.size(10.dp))
-            Column(
-                verticalArrangement = Arrangement.spacedBy((-9).dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.Star, contentDescription = "Watchlist")
-                }
-                Text(text = "Wachtlist")
+
+            BottomBarButton(icon = Icons.Filled.Star, text = stringResource(id = R.string.watchlist)) {
+                /* TODO handle functionality */
             }
         }
     }
@@ -151,7 +155,7 @@ fun MovieRow(movie: Movie) {
                 AsyncImage(
                     model = movie.images[0],
                     contentScale = ContentScale.Crop,
-                    contentDescription = "placeholder image"
+                    contentDescription = "movie image"
                 )
                 Box(
                     modifier = Modifier
