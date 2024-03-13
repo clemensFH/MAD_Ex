@@ -35,6 +35,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
@@ -57,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.navigation.Navigation
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 
 class MainActivity : ComponentActivity() {
@@ -64,158 +67,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MovieAppMAD24Theme {
-                Scaffold(
-                    topBar = { MovieAppTopBar() },
-                    bottomBar = { MovieAppBottomBar() },
-                    content = { MovieList() }
-                )
-            }
+            Navigation()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MovieAppTopBar() {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource(id = R.color.purple_200),
-            titleContentColor = colorResource(id = R.color.purple_500),
-        ),
-        title = {
-            Text(stringResource(id = R.string.movie_app))
-        }
-    )
-}
-
-@Composable
-fun BottomBarButton(icon: ImageVector, text: String, onClick: () -> Unit) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy((-9).dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        IconButton(onClick = onClick) {
-            Icon(icon, contentDescription = text)
-        }
-        Text(text = text)
-    }
-}
-
-@Composable
-fun MovieAppBottomBar() {
-    BottomAppBar {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Top
-        ) {
-            BottomBarButton(icon = Icons.Filled.Home, text = stringResource(id = R.string.home)) {
-                /* TODO handle functionality */
-            }
-
-            Spacer(modifier = Modifier.size(10.dp))
-
-            BottomBarButton(icon = Icons.Filled.Star, text = stringResource(id = R.string.watchlist)) {
-                /* TODO handle functionality */
-            }
-        }
-    }
-}
-
-@Composable
-fun MovieList(movies: List<Movie> = getMovies()) {
-    LazyColumn {
-        items(movies) { movie ->
-            MovieRow(movie)
-        }
-    }
-}
-
-@Composable
-fun MovieRow(movie: Movie) {
-    var showDetails by remember {
-        mutableStateOf(false)
-    }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp),
-        shape = ShapeDefaults.Large,
-        elevation = CardDefaults.cardElevation(10.dp)
-    ) {
-        Column {
-            Box(
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = movie.images[0],
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "movie image"
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    Icon(
-                        tint = MaterialTheme.colorScheme.secondary,
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Add to favorites"
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = movie.title)
-                Icon(
-                    modifier = Modifier
-                        .clickable {
-                            showDetails = !showDetails
-                        },
-                    imageVector =
-                    if (showDetails) Icons.Filled.KeyboardArrowDown
-                    else Icons.Default.KeyboardArrowUp, contentDescription = "show more"
-                )
-            }
-
-            AnimatedVisibility(showDetails) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                ) {
-                    Text(text = "Director: ${movie.director}")
-                    Text(text = "Released: ${movie.year}")
-                    Text(text = "Genre: ${movie.genre}")
-                    Text(text = "Actors: ${movie.actors}")
-                    Text(text = "Rating: ${movie.rating}")
-                    Divider(modifier = Modifier.fillMaxWidth())
-                    Text(text = "Plot: ${movie.plot}")
-                }
-            }
-        }
-    }
-}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
 fun DefaultPreview() {
-    Scaffold(
+    /*Scaffold(
         topBar = { MovieAppTopBar() },
         content = { MovieList() },
         bottomBar = { MovieAppBottomBar() }
-    )
+    )*/
 }
