@@ -1,5 +1,7 @@
 package com.example.movieappmad24.models
 
+import kotlin.jvm.optionals.getOrNull
+
 data class Movie(
     val id: String,
     val title: String,
@@ -150,4 +152,12 @@ fun getMovies(): List<Movie> {
             rating = "9.5"),
 
         )
+}
+
+fun getMovieById(Id: String): Movie? {
+    val movie = getMovies().stream()
+        .filter{m -> m.id.equals(Id)}
+        .findFirst().getOrNull()
+
+    return movie
 }

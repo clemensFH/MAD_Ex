@@ -56,9 +56,10 @@ fun HomeScreen(navController: NavHostController) {
     MovieAppMAD24Theme {
         Scaffold(
             topBar = { MovieAppTopBar() },
-            bottomBar = { MovieAppBottomBar() },
-            content = { MovieList(navController) }
-        )
+            bottomBar = { MovieAppBottomBar() }
+        ) { innerPadding ->
+            MovieList(modifier = Modifier.padding(innerPadding), navController = navController)
+        }
     }
 }
 
@@ -78,40 +79,10 @@ fun MovieAppTopBar() {
 }
 
 @Composable
-fun BottomBarButton(icon: ImageVector, text: String, onClick: () -> Unit) {
-    /*Column(
-        verticalArrangement = Arrangement.spacedBy((-9).dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        IconButton(onClick = onClick) {
-            Icon(icon, contentDescription = text)
-        }
-        Text(text = text)
-    }*/
-}
-
-@Composable
 fun MovieAppBottomBar() {
-    /*BottomAppBar {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Top
-        ) {
-            BottomBarButton(icon = Icons.Filled.Home, text = stringResource(id = R.string.home)) {
-                /* TODO handle functionality */
-            }
-
-            Spacer(modifier = Modifier.size(10.dp))
-
-            BottomBarButton(icon = Icons.Filled.Star, text = stringResource(id = R.string.watchlist)) {
-                /* TODO handle functionality */
-            }
-        }
-    }*/
     NavigationBar {
         NavigationBarItem(
-            label = { Text("Home") },
+            label = { Text(stringResource(id = R.string.home)) },
             selected = true,
             onClick = { /*TODO*/ },
             icon = {
@@ -122,7 +93,7 @@ fun MovieAppBottomBar() {
             }
         )
         NavigationBarItem(
-            label = { Text("Watchlist") },
+            label = { Text(stringResource(id = R.string.watchlist)) },
             selected = false,
             onClick = { /*TODO*/ },
             icon = {
@@ -136,11 +107,11 @@ fun MovieAppBottomBar() {
 }
 
 @Composable
-fun MovieList(navController: NavHostController, movies: List<Movie> = getMovies()) {
-    LazyColumn {
+fun MovieList(modifier: Modifier, navController: NavHostController, movies: List<Movie> = getMovies()) {
+    LazyColumn(modifier = modifier) {
         items(movies) { movie ->
             MovieRow(movie){movieId ->
-                Log.d("MovieList", "My callback value: $movieId")
+                //Log.d("MovieList", "My callback value: $movieId")
                 navController.navigate(route = "detailscreen/$movieId")
             }
         }

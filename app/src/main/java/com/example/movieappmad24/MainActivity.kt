@@ -77,9 +77,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun DefaultPreview() {
-    /*Scaffold(
-        topBar = { MovieAppTopBar() },
-        content = { MovieList() },
-        bottomBar = { MovieAppBottomBar() }
-    )*/
+    Navigation()
 }

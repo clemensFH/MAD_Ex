@@ -2,6 +2,7 @@ package com.example.movieappmad24.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,22 +27,22 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.getMovieById
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 import kotlin.jvm.optionals.getOrNull
 
 @Composable
-fun DetailScreen(navHostController: NavHostController, movieId: String?){
-    //DetailsTopAppBar(navHostController, movieName = "Avatar")
-    val movie = getMovies().stream()
-        .filter{m -> m.id.equals(movieId)}
-        .findFirst().getOrNull()
+fun DetailScreen(navHostController: NavHostController, movieId: String?) {
+    if (movieId == null) return
+
+    val movie = getMovieById(movieId)
 
     if (movie != null) {
         MovieAppMAD24Theme {
             Scaffold(
                 topBar = { DetailsTopAppBar(navHostController, movieName = movie.title) }
-            ){innerPadding ->
+            ) { innerPadding ->
                 MovieDetails(movie = movie, modifier = Modifier.padding(innerPadding))
             }
         }
@@ -50,7 +51,7 @@ fun DetailScreen(navHostController: NavHostController, movieId: String?){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsTopAppBar(navHostController: NavHostController, movieName: String){
+fun DetailsTopAppBar(navHostController: NavHostController, movieName: String) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colorResource(id = R.color.purple_200),
@@ -73,9 +74,9 @@ fun DetailsTopAppBar(navHostController: NavHostController, movieName: String){
 }
 
 @Composable
-fun MovieImageSlides(movie: Movie, modifier: Modifier){
-    LazyRow(modifier = modifier) {
-        items(movie.images){image ->
+fun MovieImageSlides(movie: Movie) {
+    LazyRow {
+        items(movie.images) { image ->
             Box(
                 modifier = Modifier
                     .height(150.dp)
@@ -93,9 +94,10 @@ fun MovieImageSlides(movie: Movie, modifier: Modifier){
 }
 
 @Composable
-fun MovieDetails(movie: Movie, modifier: Modifier){
-    Column {
+fun MovieDetails(movie: Movie, modifier: Modifier) {
+    Column(modifier = modifier) {
         MovieRow(movie = movie)
-        MovieImageSlides(modifier = modifier, movie = movie)
+        Spacer(Modifier.height(30.dp))
+        MovieImageSlides(movie = movie)
     }
 }
