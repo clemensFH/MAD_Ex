@@ -1,13 +1,6 @@
 package com.example.movieappmad24.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -18,19 +11,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.example.movieappmad24.R
-import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovieById
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.ui.components.MovieDetails
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
-import kotlin.jvm.optionals.getOrNull
 
 @Composable
 fun DetailScreen(navHostController: NavHostController, movieId: String?) {
@@ -71,33 +58,4 @@ fun DetailsTopAppBar(navHostController: NavHostController, movieName: String) {
             }
         }
     )
-}
-
-@Composable
-fun MovieImageSlides(movie: Movie) {
-    LazyRow {
-        items(movie.images) { image ->
-            Box(
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = image,
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "movie image"
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun MovieDetails(movie: Movie, modifier: Modifier) {
-    Column(modifier = modifier) {
-        MovieRow(movie = movie)
-        Spacer(Modifier.height(30.dp))
-        MovieImageSlides(movie = movie)
-    }
 }
