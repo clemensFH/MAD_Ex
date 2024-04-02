@@ -39,21 +39,32 @@ import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.navigation.Screen
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun MovieList(modifier: Modifier, navController: NavHostController, movies: List<Movie> = getMovies()) {
+fun MovieList(modifier: Modifier,
+              navController: NavHostController,
+              movies: List<Movie> ,
+              viewModel: MoviesViewModel) {
     LazyColumn(modifier = modifier) {
         items(movies) { movie ->
-            MovieRow(movie){movieId ->
-                //Log.d("MovieList", "My callback value: $movieId")
-                navController.navigate(route = "${Screen.DetailScreen.route}/$movieId")
-            }
+            MovieRow(
+                movie = movie,
+                onItemClick = {movieId ->
+                    navController.navigate(route = "${Screen.DetailScreen.route}/$movieId")
+                },
+                onToggleFavorite = {movieId ->
+                    viewModel.toggleMovie(movieId)
+                }
+            )
         }
     }
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
+fun MovieRow(movie: Movie,
+             onItemClick: (String) -> Unit = {},
+             onToggleFavorite: (String) -> Unit = {}) {
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -87,6 +98,8 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Icon(
+                        modifier = Modifier
+                            .clickable { onToggleFavorite(movie.id) },
                         tint = MaterialTheme.colorScheme.secondary,
                         imageVector = Icons.Default.FavoriteBorder,
                         contentDescription = "Add to favorites"

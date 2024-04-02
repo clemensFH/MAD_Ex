@@ -18,12 +18,17 @@ import com.example.movieappmad24.R
 import com.example.movieappmad24.models.getMovieById
 import com.example.movieappmad24.ui.components.MovieDetails
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun DetailScreen(navHostController: NavHostController, movieId: String?) {
+fun DetailScreen(
+    navHostController: NavHostController,
+    movieViewModel: MoviesViewModel,
+    movieId: String?
+) {
     if (movieId == null) return
 
-    val movie = getMovieById(movieId)
+    val movie = movieViewModel.getMovieById(movieId)
 
     if (movie != null) {
         MovieAppMAD24Theme {

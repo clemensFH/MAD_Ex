@@ -9,15 +9,19 @@ import com.example.movieappmad24.ui.components.MovieAppBottomBar
 import com.example.movieappmad24.ui.components.MovieAppTopBar
 import com.example.movieappmad24.ui.components.MovieList
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, movieViewModel: MoviesViewModel) {
     MovieAppMAD24Theme {
         Scaffold(
             topBar = { MovieAppTopBar() },
             bottomBar = { MovieAppBottomBar(navController) }
         ) { innerPadding ->
-            MovieList(modifier = Modifier.padding(innerPadding), navController = navController)
+            MovieList(modifier = Modifier.padding(innerPadding),
+                        navController = navController,
+                        movies = movieViewModel.movieList,
+                        viewModel = movieViewModel)
         }
     }
 }

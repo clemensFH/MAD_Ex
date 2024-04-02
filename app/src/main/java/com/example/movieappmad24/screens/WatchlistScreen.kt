@@ -10,16 +10,19 @@ import com.example.movieappmad24.ui.components.MovieAppBottomBar
 import com.example.movieappmad24.ui.components.MovieAppTopBar
 import com.example.movieappmad24.ui.components.MovieList
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
-fun WachtlistScreen(navController: NavHostController) {
+fun WachtlistScreen(navController: NavHostController, movieViewModel: MoviesViewModel) {
     MovieAppMAD24Theme {
         Scaffold(
             topBar = { MovieAppTopBar() },
             bottomBar = { MovieAppBottomBar(navController) }
         ) { innerPadding ->
-            val movies = getMovies()
-            MovieList(modifier = Modifier.padding(innerPadding), navController = navController, movies = movies.subList(6,9))
+            MovieList(modifier = Modifier.padding(innerPadding),
+                        navController = navController,
+                        movies = movieViewModel.favoritesList,
+                        viewModel = movieViewModel)
         }
     }
 }
