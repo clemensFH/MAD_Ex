@@ -35,7 +35,9 @@ fun DetailScreen(
             Scaffold(
                 topBar = { DetailsTopAppBar(navHostController, movieName = movie.title) }
             ) { innerPadding ->
-                MovieDetails(movie = movie, modifier = Modifier.padding(innerPadding))
+                MovieDetails(movie = movie,
+                            modifier = Modifier.padding(innerPadding),
+                            viewModel = movieViewModel)
             }
         }
     }

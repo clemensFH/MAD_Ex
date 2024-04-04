@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -32,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -100,8 +102,10 @@ fun MovieRow(movie: Movie,
                     Icon(
                         modifier = Modifier
                             .clickable { onToggleFavorite(movie.id) },
-                        tint = MaterialTheme.colorScheme.secondary,
-                        imageVector = Icons.Default.FavoriteBorder,
+                        tint = Color.Red,
+                        imageVector =
+                        if (movie.isFavorite) Icons.Default.Favorite
+                        else Icons.Default.FavoriteBorder,
                         contentDescription = "Add to favorites"
                     )
                 }
@@ -166,9 +170,14 @@ fun MovieImageSlides(movie: Movie) {
 }
 
 @Composable
-fun MovieDetails(movie: Movie, modifier: Modifier) {
+fun MovieDetails(movie: Movie, modifier: Modifier,
+                 viewModel: MoviesViewModel) {
     Column(modifier = modifier) {
-        MovieRow(movie = movie)
+        MovieRow(movie = movie,
+            onToggleFavorite = {movieId ->
+                viewModel.toggleMovie(movieId)
+            }
+        )
         Spacer(Modifier.height(5.dp))
         MovieImageSlides(movie = movie)
     }
