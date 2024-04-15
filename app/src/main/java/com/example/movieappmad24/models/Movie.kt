@@ -3,6 +3,7 @@ package com.example.movieappmad24.models
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.movieappmad24.R
 import kotlin.jvm.optionals.getOrNull
 
 data class Movie(
@@ -14,7 +15,7 @@ data class Movie(
     val actors: String,
     val plot: String,
     val images: List<String>,
-    val trailer: String,
+    val trailer: String = "${R.raw.trailer_placeholder}",
     val rating: String,
     val initialIsFavorite: Boolean = false
 ) {
