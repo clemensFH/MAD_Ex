@@ -3,10 +3,16 @@ package com.example.movieappmad24.models
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.example.movieappmad24.R
 import kotlin.jvm.optionals.getOrNull
 
+@Entity
 data class Movie(
+    @PrimaryKey val dbId: Long = 0,
     val id: String,
     val title: String,
     val year: String,
@@ -14,17 +20,18 @@ data class Movie(
     val director: String,
     val actors: String,
     val plot: String,
-    val images: List<String>,
+    @Ignore val images: List<String>,
     val trailer: String = "${R.raw.trailer_placeholder}",
     val rating: String,
-    val initialIsFavorite: Boolean = false
-) {
-    var isFavorite by mutableStateOf(initialIsFavorite)
+    //val initialIsFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+) /*{
+    var isFavorite by mutableStateOf(Boolean)
 
     fun toggleFavorite(){
         this.isFavorite = !this.isFavorite
     }
-}
+}*/
 
 fun getMovies(): List<Movie> {
     return listOf(

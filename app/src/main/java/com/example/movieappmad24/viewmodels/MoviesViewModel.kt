@@ -1,29 +1,42 @@
 package com.example.movieappmad24.viewmodels
 
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.movieappmad24.data.MovieRepository
 import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.models.getMovies
-import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 
-class MoviesViewModel : ViewModel() {
-    private val _movies = getMovies().toMutableStateList()
+class MoviesViewModel(private val repository: MovieRepository) : ViewModel() {
+    private val _movies = MutableStateFlow(listOf<Movie>())
+    val movies: StateFlow<List<Movie>> = _movies.asStateFlow()
 
-    val movieList: List<Movie>
-        get() = _movies
-
-    val favoritesList: List<Movie>
-        get() = _movies.filter { m -> m.isFavorite }
-
-    fun toggleMovie(Id: String){
-        _movies.find { m -> m.id.equals(Id) }?.toggleFavorite()
+    init {
+        viewModelScope.launch {
+            repository.getAllMovies().distinctUntilChanged()
+                .collect { listOfMovies ->
+                    _movies.value = listOfMovies
+                }
+        }
     }
 
-    fun getMovieById(Id: String): Movie? {
-        val movie = _movies.stream()
-            .filter{m -> m.id.equals(Id)}
-            .findFirst().getOrNull()
+    val movieList: Flow<List<Movie>>
+        get() = movies
 
-        return movie
+    val favoritesList: Flow<List<Movie>>
+        get() = repository.getFavoriteMovies()
+
+    suspend fun toggleMovie(Id: Long){
+        val toUpdate = _movies.firstOrNull { m ->  }
+        repository.updateMovie(toUpdate)
+    }
+
+    fun getMovieById(Id: Long): Movie {
+        repository.getMovieById(Id)
     }
 }

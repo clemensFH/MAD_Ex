@@ -56,10 +56,9 @@ import com.example.movieappmad24.viewmodels.MoviesViewModel
 @Composable
 fun MovieList(modifier: Modifier,
               navController: NavHostController,
-              movies: List<Movie> ,
               viewModel: MoviesViewModel) {
     LazyColumn(modifier = modifier) {
-        items(movies) { movie ->
+        items(viewModel.movies) { movie ->
             MovieRow(
                 movie = movie,
                 onItemClick = {movieId ->
