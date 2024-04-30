@@ -12,26 +12,31 @@ import kotlin.jvm.optionals.getOrNull
 
 @Entity
 data class Movie(
-    @PrimaryKey val dbId: Long = 0,
-    val id: String,
-    val title: String,
-    val year: String,
-    val genre: String,
-    val director: String,
-    val actors: String,
-    val plot: String,
+    @PrimaryKey(autoGenerate = true)
+    var dbId: Long = 0,
+    var id: String,
+    var title: String,
+    var year: String,
+    var genre: String,
+    var director: String,
+    var actors: String,
+    var plot: String,
     @Ignore val images: List<String>,
-    val trailer: String = "${R.raw.trailer_placeholder}",
-    val rating: String,
+    var trailer: String = "${R.raw.trailer_placeholder}",
+    var rating: String,
     //val initialIsFavorite: Boolean = false
-    val isFavorite: Boolean = false,
-) /*{
-    var isFavorite by mutableStateOf(Boolean)
+    var isFavorite: Boolean = false,
+) {
+//    var isFavorite by mutableStateOf(Boolean)
+    constructor() : this(0, "", "", "", "", "", "", "", listOf(), "${R.raw.trailer_placeholder}", "", false)
 
-    fun toggleFavorite(){
-        this.isFavorite = !this.isFavorite
-    }
-}*/
+    //constructor() : this( "", "", "", "", "", "", "", listOf(), "${R.raw.trailer_placeholder}", "", false)
+
+//    fun setDbId(value: Long) {
+//        dbId = value
+//    }
+
+}
 
 fun getMovies(): List<Movie> {
     return listOf(

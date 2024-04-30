@@ -28,6 +28,7 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,15 +58,16 @@ import com.example.movieappmad24.viewmodels.MoviesViewModel
 fun MovieList(modifier: Modifier,
               navController: NavHostController,
               viewModel: MoviesViewModel) {
+    val moviesState = viewModel.movies.collectAsState()
     LazyColumn(modifier = modifier) {
-        items(viewModel.movies) { movie ->
+        items(moviesState.value) { movie ->
             MovieRow(
                 movie = movie,
                 onItemClick = {movieId ->
                     navController.navigate(route = "${Screen.DetailScreen.route}/$movieId")
                 },
                 onToggleFavorite = {movieId ->
-                    viewModel.toggleMovie(movieId)
+//                    viewModel.toggleMovie(movieId)
                 }
             )
         }
@@ -98,7 +100,7 @@ fun MovieRow(movie: Movie,
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = movie.images[0],
+                    model = "movie.images?.get(0)",
                     contentScale = ContentScale.Crop,
                     contentDescription = "movie image"
                 )
@@ -244,7 +246,7 @@ fun MovieDetails(movie: Movie, modifier: Modifier,
     Column(modifier = modifier) {
         MovieRow(movie = movie,
             onToggleFavorite = {movieId ->
-                viewModel.toggleMovie(movieId)
+//                viewModel.toggleMovie(movieId)
             }
         )
         Spacer(Modifier.height(5.dp))

@@ -17,7 +17,7 @@ import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
 
 @Composable
-fun HomeScreen(navController: NavHostController, movieViewModel: MoviesViewModel) {
+fun HomeScreen(navController: NavHostController) {
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MoviesViewModelFactory(repository = repository)
@@ -30,7 +30,6 @@ fun HomeScreen(navController: NavHostController, movieViewModel: MoviesViewModel
         ) { innerPadding ->
             MovieList(modifier = Modifier.padding(innerPadding),
                         navController = navController,
-                        movies = movieViewModel.movieList,
                         viewModel = viewModel)
         }
     }
