@@ -9,6 +9,6 @@ class MovieRepository(private val movieDao: MovieDAO) {
     suspend fun deleteMovie(movie: Movie) = movieDao.delete(movie)
     fun getAllMovies(): Flow<List<Movie>> = movieDao.getAll()
     fun getFavoriteMovies(): Flow<List<Movie>> = movieDao.getFavorites()
-    fun getMovieById(id: Long): Flow<Movie?> = movieDao.getById(id)
+    fun getMovieById(id: String): Flow<Movie?> = movieDao.getById(id)
 
 }

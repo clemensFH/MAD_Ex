@@ -19,8 +19,8 @@ interface MovieDAO {
     @Update
     fun update(movie: Movie)
 
-    @Query("SELECT * FROM movie WHERE dbId = :id")
-    fun getById(id: Long): Flow<Movie>
+    @Query("SELECT * FROM movie WHERE id = :id")
+    fun getById(id: String): Flow<Movie>
 
     @Query("SELECT * FROM movie")
     fun getAll(): Flow<List<Movie>>

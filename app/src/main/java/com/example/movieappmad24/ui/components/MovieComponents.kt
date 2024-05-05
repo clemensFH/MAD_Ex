@@ -28,10 +28,12 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,21 +55,27 @@ import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.navigation.Screen
 import com.example.movieappmad24.viewmodels.MoviesViewModel
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @Composable
-fun MovieList(modifier: Modifier,
+fun MovieList(movies: StateFlow<List<Movie>>,
+              modifier: Modifier,
               navController: NavHostController,
               viewModel: MoviesViewModel) {
-    val moviesState = viewModel.movies.collectAsState()
+    val moviesState by movies.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
     LazyColumn(modifier = modifier) {
-        items(moviesState.value) { movie ->
+        items(moviesState) { movie ->
             MovieRow(
                 movie = movie,
                 onItemClick = {movieId ->
                     navController.navigate(route = "${Screen.DetailScreen.route}/$movieId")
                 },
-                onToggleFavorite = {movieId ->
-//                    viewModel.toggleMovie(movieId)
+                onToggleFavorite = {
+                    coroutineScope.launch {
+                        viewModel.toggle(movie)
+                    }
                 }
             )
         }
@@ -77,7 +85,7 @@ fun MovieList(modifier: Modifier,
 @Composable
 fun MovieRow(movie: Movie,
              onItemClick: (String) -> Unit = {},
-             onToggleFavorite: (String) -> Unit = {}) {
+             onToggleFavorite: () -> Unit) {
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -112,7 +120,7 @@ fun MovieRow(movie: Movie,
                 ) {
                     Icon(
                         modifier = Modifier
-                            .clickable { onToggleFavorite(movie.id) },
+                            .clickable { onToggleFavorite() },
                         tint = Color.Red,
                         imageVector =
                         if (movie.isFavorite) Icons.Default.Favorite
@@ -243,10 +251,14 @@ fun MovieTrailer(movie: Movie) {
 @Composable
 fun MovieDetails(movie: Movie, modifier: Modifier,
                  viewModel: MoviesViewModel) {
+    val coroutineScope = rememberCoroutineScope()
+
     Column(modifier = modifier) {
         MovieRow(movie = movie,
-            onToggleFavorite = {movieId ->
-//                viewModel.toggleMovie(movieId)
+            onToggleFavorite = {
+                coroutineScope.launch {
+                    viewModel.toggle(movie)
+                }
             }
         )
         Spacer(Modifier.height(5.dp))

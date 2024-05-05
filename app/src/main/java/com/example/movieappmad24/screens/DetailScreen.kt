@@ -1,5 +1,6 @@
 package com.example.movieappmad24.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -11,6 +12,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -19,12 +23,14 @@ import androidx.navigation.NavHostController
 import com.example.movieappmad24.R
 import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.data.MovieRepository
+import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovieById
 import com.example.movieappmad24.ui.components.MovieDetails
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 @Composable
@@ -39,27 +45,27 @@ fun DetailScreen(
 
     if (movieId == null) return
 
-    coroutineScope {
-        val movie = viewModel.getMovie("tt0499549")
+    val movie = remember { mutableStateOf<Movie?>(null) }
+
+    if (movieId != null) {
+        LaunchedEffect(movieId) {
+            movie.value = viewModel.getMovie(movieId).first()
+        }
     }
 
-    val movie = flow {
-        val movie = viewModel.getMovie("tt0499549")
-        emit(movie)
-    }//getMovieById("tt0499549") //movieViewModel.getMovieById(movieId)
-
-    if (movie != null) {
+    if (movie.value != null) {
         MovieAppMAD24Theme {
             Scaffold(
-                topBar = { DetailsTopAppBar(navHostController, movieName = movie.collect()title) }
+                topBar = { DetailsTopAppBar(navHostController, movieName = movie.value!!.title) }
             ) { innerPadding ->
-                MovieDetails(movie = movie,
+                MovieDetails(movie = movie.value!!,
                             modifier = Modifier.padding(innerPadding),
                             viewModel = viewModel)
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

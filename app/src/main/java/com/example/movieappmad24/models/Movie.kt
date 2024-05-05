@@ -36,6 +36,10 @@ data class Movie(
 //        dbId = value
 //    }
 
+    fun toogleIsFavortie(){
+        isFavorite = !isFavorite
+    }
+
 }
 
 fun getMovies(): List<Movie> {
